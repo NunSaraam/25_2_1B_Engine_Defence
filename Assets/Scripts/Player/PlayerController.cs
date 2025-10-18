@@ -1,86 +1,87 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
+public enum PlayerState
+{
+    Interact,
+    Idle,
+    Move,
+    Running,
+    Attacking,
+    Dead,
+}
 
 public class PlayerController : MonoBehaviour
 {
-    public int maxHP = 100;
-    public float speed = 4f;
-    public float runSpeed = 7f;
+    //플레이어
+    public float moveSpeed = 10f;
+    public float runSpeed = 20f;
+
+    public float cameraRotationSpeed = 5f;
+
+    private KeyCode inventoryKey = KeyCode.Tab;
+    private KeyCode runKey = KeyCode.LeftShift;
     private float currentSpeed;
-
-    public float jumpPower = 5f;
-    public float gravity = -9.81f;
-
     private CharacterController controller;
-    private Vector3 velocity;
 
-    public bool isGrounded;
+    //카메라
+    public CinemachineVirtualCamera playerCamera;
+    public float mounseSensitivity = 1f;
+    private float xRotation = 0f;
+    private float yRotation = 0f;
 
-    //public Slider hpSlider;
 
-    private int currentHP;
     private void Start()
     {
-        currentHP = maxHP;
-        currentSpeed = speed;
-        Cursor.lockState = CursorLockMode.Locked;
         controller = GetComponent<CharacterController>();
-        //hpSlider.value = 1f;
+        currentSpeed = moveSpeed;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
     {
-        isGrounded = controller.isGrounded;
+        HandleMove();
+        RotationCamera();
+    }
+
+    void HandleMove()
+    {
+        if (Input.GetKey(runKey))
+        {
+            currentSpeed = runSpeed;
+        }
+        else
+        {
+            currentSpeed = moveSpeed;
+        }
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
+        
 
-        //Vector3 camFoward = virtualCam.transform.forward;
-        //camFoward.y = 0;
-        //camFoward.Normalize();
-
-        //Vector3 camRight = virtualCam.transform.right;
-        //camRight.y = 0;
-        //camRight.Normalize();
-
-        //Vector3 move = (camFoward * z + camRight * x).normalized;
-        //if (!cS.usingFreeLook)
-        //    controller.Move(move * currentSpeed * Time.deltaTime);
-
-        //float cameraYaw = pov.m_HorizontalAxis.Value;
-        //Quaternion targetRot = Quaternion.Euler(0f, cameraYaw, 0f);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
-
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
-        {
-            velocity.y = jumpPower;
-        }
-
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(move * currentSpeed * Time.deltaTime);
     }
 
-    public void TakeDamage(int damage)
+    void RotationCamera()
     {
-        currentHP -= damage;
-        //hpSlider.value = (float)currentHP / maxHP;
-        if (currentHP <= 0)
-        {
-            Die();
-        }
+        float mouseX = Input.GetAxis("Mouse X") * mounseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mounseSensitivity;
+
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+
+        yRotation += mouseX;
+
+        playerCamera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        transform.Rotate(Vector3.up * mouseX);
     }
 
-    public void Die()
-    {
-        Destroy(gameObject);
-
-    }
 }
