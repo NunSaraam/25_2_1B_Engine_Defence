@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     public float cameraRotationSpeed = 5f;
 
-    private KeyCode inventoryKey = KeyCode.Tab;
+
     private KeyCode runKey = KeyCode.LeftShift;
     private bool isRuning = false;
 
@@ -65,5 +65,6 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         controller.Move(move * currentSpeed * Time.deltaTime);
     }
+
 
 }
