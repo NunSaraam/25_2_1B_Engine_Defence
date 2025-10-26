@@ -11,5 +11,7 @@ public class EnemySO : ScriptableObject
     public float enemyHealth = 10f;
     public float moveSpeed = 3f;
     public float damage = 5f;
+    public float attackRange = 2f;
+    public float attackCoolDown = 1.5f;
 
 }

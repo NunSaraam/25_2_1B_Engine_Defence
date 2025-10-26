@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
 
     private KeyCode runKey = KeyCode.LeftShift;
-    private bool isRuning = false;
 
     private float currentSpeed;
     private CharacterController controller;

@@ -6,9 +6,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private EnemySO data;
+    public EnemySO data;
     private NavMeshAgent agent;
-    private float currentHealth;
+    public float currentHealth { get; private set; }
 
     public float attackDamage => data.damage;
     public float MoveSpeed => data.moveSpeed;
@@ -16,15 +16,18 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        InitiallizeStats();
+        currentHealth = data.enemyHealth;
+
+        var agent = GetComponent<NavMeshAgent>();
+        if (agent != null) agent.speed = data.moveSpeed;
+
+        //InitiallizeStats();
     }
 
-    void InitiallizeStats()
-    {
-        currentHealth = data.enemyHealth;
-        agent.speed = data.moveSpeed;
-    }
+    //void InitiallizeStats()
+    //{
+
+    //}
 
     public void TakeDamage(float amount)
     {
