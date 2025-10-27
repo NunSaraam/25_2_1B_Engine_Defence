@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 6251291712259865397}
   - component: {fileID: 4064855209082525437}
   - component: {fileID: 7942274759621074993}
+  - component: {fileID: 8570435886037946130}
   m_Layer: 3
   m_Name: Swarm
   m_TagString: Enemy
@@ -186,6 +187,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 833645117aa6edc40b571ec96cf618a4, type: 2}
+  healthBarPrefab: {fileID: 4057677285637424666, guid: 960399c61def97849964e7c3cc311222,
+    type: 3}
+  goldReward: 50
 --- !u!114 &4064855209082525437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,3 +230,30 @@ CapsuleCollider:
   m_Height: 1.12
   m_Direction: 1
   m_Center: {x: 0, y: 0.537095, z: -0.03}
+--- !u!54 &8570435886037946130
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5465780858611685100}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0

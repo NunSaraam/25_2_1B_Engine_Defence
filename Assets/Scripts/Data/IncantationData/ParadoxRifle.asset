@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04652425215d3e04c81047c2b1b0863e, type: 3}
-  m_Name: Temproal Cannon
+  m_Name: ParadoxRifle
   m_EditorClassIdentifier: 
-  incantationName: Temproal Cannon
-  incantationPrefab: {fileID: 0}
+  incantationName: Paradox Rifle
+  incantationPrefab: {fileID: 344755774999680674, guid: 8309b8faf22a23e4ea0ed95076d540b6,
+    type: 3}
+  weaponPrefab: {fileID: 344755774999680674, guid: 8309b8faf22a23e4ea0ed95076d540b6,
+    type: 3}
   level: 1
-  damage: 5
-  fireRate: 0.5
+  damage: 10
+  fireRate: 2

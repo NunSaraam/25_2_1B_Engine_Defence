@@ -17,3 +17,5 @@ MonoBehaviour:
   enemyHealth: 10
   moveSpeed: 3
   damage: 5
+  attackRange: 3
+  attackCoolDown: 1.5

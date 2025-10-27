@@ -7,8 +7,14 @@ public class AttackPositionManager : MonoBehaviour
     public Transform[] attackPoints;
     private bool[] occupied;
 
-    private void Awake()
+    private void Start()
     {
+        if (attackPoints == null || attackPoints.Length == 0)
+        {
+            Debug.LogWarning($"{name}: AttackPoints가 비어 있음!");
+            return;
+        }
+
         occupied = new bool[attackPoints.Length];
     }
 
@@ -19,6 +25,7 @@ public class AttackPositionManager : MonoBehaviour
 
         for (int i = 0; i < attackPoints.Length; i++)
         {
+            if (attackPoints[i] == null) continue;
             if (occupied[i]) continue;
 
             float dist = Vector3.Distance(fromPos, attackPoints[i].position);
@@ -35,6 +42,8 @@ public class AttackPositionManager : MonoBehaviour
             return attackPoints[bestIndex];
         }
 
+        // 모든 포인트가 점유된 경우 null 반환
+        Debug.Log($"{name}: 모든 공격 포인트가 점유 중 -> Random 포인트 사용");
         return null;
     }
 
@@ -47,6 +56,17 @@ public class AttackPositionManager : MonoBehaviour
                 occupied[i] = false;
                 break;
             }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (attackPoints == null) return;
+        Gizmos.color = Color.green;
+        foreach (var p in attackPoints)
+        {
+            if (p != null)
+                Gizmos.DrawSphere(p.position, 0.2f);
         }
     }
 }

@@ -16,7 +16,10 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         inventoryPanel.SetActive(false);
-        InitializedInventory();
+        InitializeInventory();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
@@ -30,17 +33,31 @@ public class InventoryUI : MonoBehaviour
         {
             isInventoryOpen = !isInventoryOpen;
             inventoryPanel.SetActive(isInventoryOpen);
+
+            if (isInventoryOpen)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0f;
+                RefreshInventory();
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                Time.timeScale = 1f;
+            }
         }
     }
 
-    void InitializedInventory()
+    void InitializeInventory()
     {
         foreach (Transform child in slotContainer)
         {
             Destroy(child.gameObject);
         }
 
-        List<IncantationSO> weapons = WeaponManager.Instance.allweapon;
+        List<IncantationSO> weapons = WeaponManager.Instance.allWeapons; //  ¼öÁ¤µÊ
 
         for (int i = 0; i < weapons.Count; i++)
         {
@@ -49,7 +66,7 @@ public class InventoryUI : MonoBehaviour
             TMP_Text slotText = slotInstance.GetComponentInChildren<TMP_Text>();
             if (slotText != null)
             {
-                slotText.text = weapons[i].incantationName;
+                slotText.text = $"{weapons[i].incantationName} (Lv.{weapons[i].level})";
             }
 
             Button slotButton = slotInstance.GetComponent<Button>();
@@ -59,7 +76,57 @@ public class InventoryUI : MonoBehaviour
                 slotButton.onClick.AddListener(() =>
                 {
                     WeaponManager.Instance.EquipWeapon(weaponIndex);
+                    HighlightCurrentWeapon(weaponIndex);
                 });
+            }
+        }
+    }
+
+    public void RefreshInventory()
+    {
+        foreach (Transform child in slotContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        List<IncantationSO> weapons = WeaponManager.Instance.allWeapons; //  ¼öÁ¤µÊ
+
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            GameObject slotInstance = Instantiate(weaponSlotPrefab, slotContainer);
+
+            TMP_Text slotText = slotInstance.GetComponentInChildren<TMP_Text>();
+            if (slotText != null)
+            {
+                slotText.text = $"{weapons[i].incantationName} (Lv.{weapons[i].level})";
+            }
+
+            Button slotButton = slotInstance.GetComponent<Button>();
+            if (slotButton != null)
+            {
+                int weaponIndex = i;
+                slotButton.onClick.AddListener(() =>
+                {
+                    WeaponManager.Instance.EquipWeapon(weaponIndex);
+                    HighlightCurrentWeapon(weaponIndex);
+                });
+            }
+
+            if (i == WeaponManager.Instance.GetCurrentWeaponIndex())
+            {
+                HighlightCurrentWeapon(i);
+            }
+        }
+    }
+
+    private void HighlightCurrentWeapon(int index)
+    {
+        for (int i = 0; i < slotContainer.childCount; i++)
+        {
+            Image img = slotContainer.GetChild(i).GetComponent<Image>();
+            if (img != null)
+            {
+                img.color = (i == index) ? Color.yellow : Color.white;
             }
         }
     }

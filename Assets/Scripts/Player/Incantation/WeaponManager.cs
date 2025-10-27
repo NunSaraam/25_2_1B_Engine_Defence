@@ -6,10 +6,11 @@ public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager Instance { get; private set; }
 
-    public List<IncantationSO> allweapon;
+    public List<IncantationSO> allWeapons;
+    public Transform weaponHolder;
+    public PlayerWeapon playerWeapon;
 
-    public PlayerWeapon currentWeapon;
-
+    private BaseWeapon currentWeaponInstance;
     private int currentWeaponIndex = 0;
 
     private void Awake()
@@ -20,7 +21,7 @@ public class WeaponManager : MonoBehaviour
 
     private void Start()
     {
-        if (allweapon.Count >= 0)
+        if (allWeapons.Count > 0)
         {
             EquipWeapon(0);
         }
@@ -28,20 +29,30 @@ public class WeaponManager : MonoBehaviour
 
     public void EquipWeapon(int index)
     {
-        if (index < 0 || index >= allweapon.Count)
-            return;
+        if (index < 0 || index >= allWeapons.Count) return;
+
         currentWeaponIndex = index;
-        currentWeapon.Initialize(allweapon[index]);
+        IncantationSO weaponData = allWeapons[index];
+
+        playerWeapon.Initialize(weaponData);
+
+        if (currentWeaponInstance != null)
+        {
+            Destroy(currentWeaponInstance.gameObject);
+        }
+
+        GameObject weaponObj = Instantiate(weaponData.weaponPrefab, weaponHolder);
+        weaponObj.SetActive(true);
+        currentWeaponInstance = weaponObj.GetComponent<BaseWeapon>();
+        currentWeaponInstance.Initialize(weaponData);
+
+        playerWeapon.WeaponModel = weaponObj;
     }
 
-    public void EquipNextWeapon()
+    public BaseWeapon GetCurrentWeapon() => currentWeaponInstance;
+    public IncantationSO GetCurrentWeaponData() => allWeapons[currentWeaponIndex];
+    public int GetCurrentWeaponIndex()
     {
-        int next = (currentWeaponIndex + 1) % allweapon.Count;
-        EquipWeapon(next);
-    }
-
-    public IncantationSO GetCurrentWeaponData()
-    {
-        return allweapon[currentWeaponIndex];
+        return currentWeaponIndex;
     }
 }
